@@ -1,0 +1,26 @@
+services:
+  minecraft:
+    image: itzg/minecraft-server:java21
+    container_name: minecraft_simple
+    restart: unless-stopped
+
+    ports:
+      
+      - "27565:25565/tcp"
+
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "1.21.4"
+
+      MEMORY: "4G"
+
+      ONLINE_MODE: "FALSE"
+      DIFFICULTY: "normal"
+      MODE: "survival"
+      MOTD: "Serveur Minecraft Simple Docker"
+      MAX_PLAYERS: "10"
+
+    volumes:
+      
+      - ./data:/data
