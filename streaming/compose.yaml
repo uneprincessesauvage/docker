@@ -115,7 +115,23 @@ services:
     networks:
       - default
       - gluetun_network
-  
+
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+    ports:
+      - 8096:8096
+    environment:
+      - TZ=Europe/Paris
+    volumes:
+      - /data/services/jellyfin/config:/config
+      - /data/services/jellyfin/cache:/cache
+      - /data/media:/media:ro
+    networks:
+      - default
+      - gluetun_network
+
   flaresolverr:
     # DockerHub mirror flaresolverr/flaresolverr:latest
     image: ghcr.io/flaresolverr/flaresolverr:latest
