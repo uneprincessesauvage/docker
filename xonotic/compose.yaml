@@ -1,0 +1,9 @@
+services:
+  xonotic:
+    image: umair101/xonotic-server:v1.1
+    container_name: xonotic
+    restart: unless-stopped
+
+    ports:
+      - "26000:26000/udp"
+
