@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kaomotchi ♡</title>
+<style>
+    :root {
+        --pink: #ffb7d5;
+        --dark-pink: #e77eaa;
+        --purple: #d9c5ff;
+        --cream: #fff9fc;
+        --text: #60465d;
+        --green: #b8eac7;
+        --blue: #b8e2ff;
+        --yellow: #ffe69a;
+    }
+    * {
+        box-sizing: border-box;
+    }
+    body {
+        margin: 0;
+        min-height: 100vh;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Trebuchet MS", sans-serif;
+        color: var(--text);
+        background:
+            radial-gradient(circle at 15% 20%, #ffe0ed 0 3px, transparent 4px),
+            radial-gradient(circle at 85% 70%, #e9dcff 0 4px, transparent 5px),
+            linear-gradient(135deg, #fff0f7, #f0eaff);
+    }
+    button {
+        font: inherit;
+        cursor: pointer;
+        border: none;
+        transition: transform .15s, filter .15s;
+    }
+    button:hover {
+        filter: brightness(1.04);
+        transform: translateY(-2px);
+    }
+    button:active {
+        transform: scale(.96);
+    }
+    .game {
+        width: 100%;
+        max-width: 430px;
+        overflow: hidden;
+        border: 3px solid white;
+        border-radius: 28px;
+        background: var(--cream);
+        box-shadow: 0 15px 45px #bd8ebc35;
+    }
+    .header {
+        padding: 20px;
+        text-align: center;
+        background: linear-gradient(120deg, #ffc6df, #ded0ff);
+    }
+    .header h1 {
+        margin: 0;
+        font-size: 27px;
+    }
+    .header p {
+        margin: 7px 0 0;
+        font-size: 13px;
+    }
+    .pet-area {
+        padding: 24px 18px 18px;
+        text-align: center;
+    }
+    .pet {
+        min-height: 115px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 48px;
+        animation: float 3s ease-in-out infinite;
+        user-select: none;
+    }
+    .pet-name {
+        margin: 7px 0 4px;
+        font-size: 23px;
+        font-weight: bold;
+    }
+    .level {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 20px;
+        background: #f1e8ff;
+        font-size: 12px;
+    }
+    .message {
+        min-height: 58px;
+        margin: 18px 0 4px;
+        padding: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+        background: white;
+        border: 1px solid #f5dfef;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    .stats {
+        padding: 4px 22px 18px;
+    }
+    .stat {
+        margin-bottom: 13px;
+    }
+    .stat-top {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+        font-size: 13px;
+    }
+    .bar {
+        height: 11px;
+        overflow: hidden;
+        border-radius: 20px;
+        background: #f0e8ef;
+    }
+    .fill {
+        height: 100%;
+        width: 50%;
+        border-radius: inherit;
+        transition: width .35s;
+    }
+    .hunger { background: #ffb2bf; }
+    .energy { background: #a9d9ff; }
+    .happiness { background: #ffe08c; }
+    .cleanliness { background: #b6e8c7; }
+    .actions {
+        padding: 0 18px 20px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 9px;
+    }
+    .action {
+        min-height: 75px;
+        padding: 10px 4px;
+        border-radius: 16px;
+        background: white;
+        border: 1px solid #f0dce9;
+        color: var(--text);
+        font-size: 12px;
+    }
+    .action .icon {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 23px;
+    }
+    .feed { background: #fff0f3; }
+    .cuddle { background: #fff0f8; }
+    .play { background: #fff8df; }
+    .sleep { background: #edf5ff; }
+    .wash { background: #e9fbf4; }
+    .talk { background: #f3edff; }
+    .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 13px 18px;
+        background: #fbf0fa;
+        font-size: 11px;
+    }
+    .reset {
+        padding: 7px 10px;
+        border-radius: 10px;
+        background: white;
+        color: var(--text);
+        font-size: 11px;
+    }
+    .heart {
+        color: #ee8bb8;
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(-2deg); }
+        50% { transform: translateY(-7px) rotate(2deg); }
+    }
+    @media (max-width: 360px) {
+        body { padding: 8px; }
+        .actions { gap: 6px; padding-inline: 10px; }
+        .stats { padding-inline: 16px; }
+    }
+</style>
+</head>
+<body>
+<main class="game">
+    <header class="header">
+        <h1>Kaomotchi <span class="heart">♡</span></h1>
+        <p>Un petit compagnon qui a besoin de toi !</p>
+    </header>
+    <section class="pet-area">
+        <div class="pet" id="pet">(｡♥‿♥｡)</div>
+        <div class="pet-name" id="petName">Petit Nuage ♡</div>
+        <div class="level" id="level">Niveau 1 · Nouveau compagnon</div>
+        <div class="message" id="message" aria-live="polite">
+            Coucouuu ! Je suis tellement heureuse de te rencontrer !
+            (˶˃ ᵕ ˂˶) ♡
+        </div>
+    </section>
+    <section class="stats">
+        <div class="stat">
+            <div class="stat-top">
+                <span>🍓 Faim</span>
+                <span id="hungerValue">25 %</span>
+            </div>
+            <div class="bar">
+                <div class="fill hunger" id="hungerBar"></div>
+            </div>
+        </div>
+        <div class="stat">
+            <div class="stat-top">
+                <span>💤 Énergie</span>
+                <span id="energyValue">80 %</span>
+            </div>
+            <div class="bar">
+                <div class="fill energy" id="energyBar"></div>
+            </div>
+        </div>
+        <div class="stat">
+            <div class="stat-top">
+                <span>💗 Bonheur</span>
+                <span id="happyValue">75 %</span>
+            </div>
+            <div class="bar">
+                <div class="fill happiness" id="happyBar"></div>
+            </div>
+        </div>
+        <div class="stat">
+            <div class="stat-top">
+                <span>🫧 Propreté</span>
+                <span id="cleanValue">85 %</span>
+            </div>
+            <div class="bar">
+                <div class="fill cleanliness" id="cleanBar"></div>
+            </div>
+        </div>
+    </section>
+    <section class="actions">
+        <button class="action feed" onclick="act('feed')">
+            <span class="icon">🍓</span>
+            Nourrir
+        </button>
+        <button class="action cuddle" onclick="act('cuddle')">
+            <span class="icon">🫂</span>
+            Câliner
+        </button>
+        <button class="action play" onclick="act('play')">
+            <span class="icon">🎾</span>
+            Jouer
+        </button>
+        <button class="action sleep" onclick="act('sleep')">
+            <span class="icon">🌙</span>
+            Dormir
+        </button>
+        <button class="action wash" onclick="act('wash')">
+            <span class="icon">🛁</span>
+            Laver
+        </button>
+        <button class="action talk" onclick="act('talk')">
+            <span class="icon">💬</span>
+            Papoter
+        </button>
+    </section>
+    <footer class="footer">
+        <span id="age">Âge : 0 min · Expérience : 0 XP</span>
+        <button class="reset" onclick="resetGame()">Recommencer ↻</button>
+    </footer>
+</main>
+<script>
+    // Toutes les statistiques du petit compagnon sont définies ici.
+    const initialState = {
+        hunger: 25,
+        energy: 80,
+        happy: 75,
+        clean: 85,
+        age: 0,
+        xp: 0
+    };
+    let pet = { ...initialState };
+    const messages = {
+        feed: [
+            "Miam miam ! C'était délicieux ! (๑ᵔ⤙ᵔ๑)",
+            "Encore une petite fraise ? S'il te plaît ! ♡",
+            "Nom nom nom ! Tu es la meilleure ! (˶ᵔ ᵕ ᵔ˶)",
+            "Mon petit ventre est heureux ! 🍓"
+        ],
+        cuddle: [
+            "Aaaah, un câlin ! Je t'aime fort ! (づ๑•ᴗ•๑)づ♡",
+            "Ne me lâche plus jamais ! (｡♥‿♥｡)",
+            "Je ronronne presque de bonheur ! ♡",
+            "Encore des câlins, encore, encore ! (っ˘ω˘ς)"
+        ],
+        play: [
+            "Youpiiii ! On recommence ? ヽ(>∀<☆)ノ",
+            "Hihihi, tu ne m'attraperas pas !",
+            "C'était trop amusant ! ♡",
+            "Je cours partout ! (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧"
+        ],
+        sleep: [
+            "Bonne nuit... fais de beaux rêves. (－ω－) zzZ",
+            "Je vais faire un gros dodo... ♡",
+            "Zzz... je rêve de fraises...",
+            "Merci de veiller sur moi. Bonne nuit ! 🌙"
+        ],
+        wash: [
+            "Plouf ! Me voilà toute propre ! 🫧",
+            "Hihihi, les chatouilles de l'eau !",
+            "Je sens la fleur maintenant ! (˶˃ ᵕ ˂˶)",
+            "Bain terminé ! Je brille ! ✨"
+        ],
+        talk: [
+            "Raconte-moi tout ! Je t'écoute. ♡",
+            "Tu sais que tu es ma personne préférée ?",
+            "Moi aussi, j'ai plein de choses à te raconter !",
+            "On reste ensemble encore un peu ? (｡♥‿♥｡)",
+            "Tu crois que Gérard le canard aime les fraises ? 🦆"
+        ]
+    };
+    const random = array =>
+        array[Math.floor(Math.random() * array.length)];
+    function clamp(value) {
+        return Math.max(0, Math.min(100, value));
+    }
+    function changeStats(changes) {
+        for (const [key, amount] of Object.entries(changes)) {
+            pet[key] = clamp(pet[key] + amount);
+        }
+    }
+    function act(action) {
+        switch (action) {
+            case "feed":
+                changeStats({
+                    hunger: -25,
+                    happy: 5,
+                    clean: -3
+                });
+                pet.xp += 2;
+                break;
+            case "cuddle":
+                changeStats({
+                    happy: 18,
+                    energy: -3
+                });
+                pet.xp += 3;
+                break;
+            case "play":
+                if (pet.energy < 10) {
+                    showMessage(
+                        "Je suis trop fatiguée pour jouer... " +
+                        "(｡>﹏<｡) Laisse-moi me reposer ?"
+                    );
+                    updateDisplay();
+                    return;
+                }
+                changeStats({
+                    happy: 20,
+                    energy: -15,
+                    hunger: 10,
+                    clean: -5
+                });
+                pet.xp += 5;
+                break;
+            case "sleep":
+                changeStats({
+                    energy: 35,
+                    hunger: 8
+                });
+                pet.xp += 2;
+                break;
+            case "wash":
+                changeStats({
+                    clean: 30,
+                    happy: 5,
+                    energy: -2
+                });
+                pet.xp += 2;
+                break;
+            case "talk":
+                changeStats({
+                    happy: 10
+                });
+                pet.xp += 2;
+                break;
+        }
+        showMessage(random(messages[action]));
+        updateDisplay();
+    }
+    function showMessage(message) {
+        document.getElementById("message").textContent = message;
+    }
+    function getFace() {
+        if (pet.energy < 15) return "(－ω－) zzZ";
+        if (pet.hunger > 80) return "(｡•́︿•̀｡)";
+        if (pet.clean < 20) return "(；￣Д￣)";
+        if (pet.happy < 25) return "(｡╯︵╰｡)";
+        if (pet.happy > 85) return "(｡♥‿♥｡)";
+        return "(˶ᵔ ᵕ ᵔ˶)";
+    }
+    function updateDisplay() {
+        const stats = [
+            ["hunger", "hungerBar", "hungerValue"],
+            ["energy", "energyBar", "energyValue"],
+            ["happy", "happyBar", "happyValue"],
+            ["clean", "cleanBar", "cleanValue"]
+        ];
+        for (const [key, barId, valueId] of stats) {
+            document.getElementById(barId).style.width =
+                pet[key] + "%";
+            document.getElementById(valueId).textContent =
+                pet[key] + " %";
+        }
+        document.getElementById("pet").textContent = getFace();
+        const level = Math.floor(pet.xp / 20) + 1;
+        document.getElementById("level").textContent =
+            "Niveau " + level + " · " +
+            (level === 1
+                ? "Nouveau compagnon"
+                : "Compagnon niveau " + level);
+        document.getElementById("age").textContent =
+            "Âge : " + pet.age + " min · Expérience : " +
+            pet.xp + " XP";
+    }
+    // Le temps passe : les besoins évoluent doucement.
+    function timePasses() {
+        pet.age++;
+        changeStats({
+            hunger: 2,
+            energy: -2,
+            happy: -1,
+            clean: -1
+        });
+        if (pet.hunger >= 80) {
+            showMessage("J'ai faim... une petite fraise ? (｡•́︿•̀｡)");
+        } else if (pet.energy <= 15) {
+            showMessage("Mes yeux se ferment tout seuls... zzZ");
+        } else if (pet.happy <= 20) {
+            showMessage("Je me sens un peu seule... un câlin ? ♡");
+        } else if (pet.clean <= 20) {
+            showMessage("Un petit bain me ferait du bien ! 🫧");
+        }
+        updateDisplay();
+    }
+    function resetGame() {
+        const confirmed = confirm(
+            "Tu veux vraiment recommencer avec un nouveau compagnon ? ♡"
+        );
+        if (!confirmed) return;
+        pet = { ...initialState };
+        showMessage(
+            "Coucouuu ! Je suis tellement heureuse de te rencontrer ! " +
+            "(˶˃ ᵕ ˂˶) ♡"
+        );
+        updateDisplay();
+    }
+    updateDisplay();
+    // Une minute réelle correspond à une minute dans le jeu.
+    setInterval(timePasses, 60 * 1000);
+</script>
+</body>
+</html>
